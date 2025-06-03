@@ -8,7 +8,6 @@ from inflammation.models import daily_mean
 from inflammation.models import daily_max
 from inflammation.models import daily_min
 
-
 def test_daily_mean_zeros():
     """Test that mean function works for an array of zeros."""
     
@@ -33,15 +32,18 @@ def test_daily_mean_integers():
     # Need to use Numpy testing functions to compare arrays
     npt.assert_array_equal(daily_mean(test_input), test_result)
 
-def test_daily_max():
+@pytest.mark.parametrize(
+    ("test", "expected"),
+    [
+        ([[1, 2], [3, 4], [5, 6]], [5, 6]),
+        ([[0, 10], [10, 0], [5, 5]], [10, 10]), 
+        ([[0, -10], [-10, 0], [5, 5]], [5, 5]), 
+    ]
+)
+def test_daily_max(test, expected):
     """Test that daily_max function works for an array of positive integers"""
-
-    test_input = np.array([[1, 2],
-                          [3, 4],
-                          [5, 6]])
-    test_result = np.array([5, 6])
-    # Need to use Numpy testing functions to compare arrays
-    npt.assert_array_equal(daily_max(test_input), test_result)
+    test_input = np.array(test)
+    npt.assert_array_equal(daily_max(test_input), expected)
 
 def test_daily_min():
     """Test that daily_max function works for an array of positive integers"""
